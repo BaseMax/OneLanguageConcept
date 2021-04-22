@@ -128,10 +128,10 @@ bool iskeyword(Tokenizer *t) {
   buff[t->tokenSize] = '\0';
   for (int ci = 0; ci < t->tokenSize; ci++)
     buff[ci] = tolower(buff[ci]);
-  for (int i = 0; i < KEY__MAX - KEY_START - 1; i++) {
+  for (int i = 0; i < TOK__MAX - TOK__START - 1; i++) {
     if (strstr(keywords[i], buff) == keywords[i]) {
       free(buff);
-      t->token = i + KEY_START + 1;
+      t->token = i + TOK__START + 1;
       return true;
     }
   }
@@ -140,18 +140,25 @@ bool iskeyword(Tokenizer *t) {
 }
 
 bool isoperation(Tokenizer *t) {
-  for (int i = 0; i < OP__MAX - OP_START - 1; i++) {
+  for (int i = 0; i < OP__MAX - OP__START - 1; i++) {
+    if (opchar[i][0] == t->r[0] && opchar[i][1] == t->r[1] && opchar[i][2] == t->r[2]) {
+      t->tokenSize = 3;
+      t->token = i + OP__START + 1;
+      return true;
+    }
+  }
+  for (int i = 0; i < OP__MAX - OP__START - 1; i++) {
     if (opchar[i][0] == t->r[0] && opchar[i][1] == t->r[1]) {
       t->tokenSize = 2;
-      t->token = i + OP_START + 1;
+      t->token = i + OP__START + 1;
       return true;
     }
   }
 
-  for (int i = 0; i < OP__MAX - OP_START - 1; i++) {
+  for (int i = 0; i < OP__MAX - OP__START - 1; i++) {
     if (opchar[i][0] == t->r[0]) {
       t->tokenSize = 1;
-      t->token = i + OP_START + 1;
+      t->token = i + OP__START + 1;
       return true;
     }
   }

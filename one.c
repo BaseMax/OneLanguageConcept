@@ -112,7 +112,7 @@ void statement(Tokenizer *t) {
     break;
   }
   case TOK_VARIABLE: {
-    printf("var %s\n", Value(t));
+    printf("%s\n", Value(t));
     break;
   }
   case TOK_EOL: {
