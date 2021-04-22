@@ -55,7 +55,7 @@ int lexer(char* programm_src){
                                        sToken *stok = malloc(sizeof(sToken));
                                        stok->token = TOK_EOL;
                                        stok->data = malloc(sizeof(int));
-                                       *((int*)stok->data) = 0;
+                                       *((int*)stok->data) = TOK_EOL;
                                        int tmp = new_token(stok);
                                        free(stok->data);
                                        free(stok);
@@ -128,7 +128,7 @@ int lexer(char* programm_src){
                                                    sToken *stok = malloc(sizeof(sToken));
                                                    stok->token = TOK_EOL;
                                                    stok->data = malloc(sizeof(int));
-                                                   *((int*)stok->data) = 0;
+                                                   *((int*)stok->data) = TOK_EOL;
                                                    int tmp = new_token(stok);
                                                    free(stok->data);
                                                    free(stok);
@@ -335,15 +335,15 @@ int typekeyword(int token){
     int ret = TOK_DATA_OTHERS;
     switch(token){
         case TOK_START ... TOK_END_OPERATION-1:{
-            int ret = TOK_DATA_OPERATION;
+            ret = TOK_DATA_OPERATION;
             break;
         }
         case TOK_END_OPERATION+1 ... TOK_END_VARAIBLE_TYPE-1:{
-            int ret = TOK_DATA_VARAIBLE_TYPE;
+            ret = TOK_DATA_VARAIBLE_TYPE;
             break;
         }
         case TOK_END_VARAIBLE_TYPE+1 ... TOK_END_KEYWORD-1:{
-            int ret = TOK_DATA_KEYWORD;
+            ret = TOK_DATA_KEYWORD;
             break;
         }
     }

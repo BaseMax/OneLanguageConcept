@@ -11,7 +11,11 @@ typedef enum {
 } CharType;
 
 #define SKIP_CHAR (char[]) { ' ', '\r', '\t' , '\n', '\0'}
-#define CONTROL_CHAR (char[]) { ',', '(', ')','{','}','#','"',':','\\' ,'/','*','=', '+', '-', '.','\0'}
+#define CONTROL_CHAR (char[]) { \
+                                '\\', '+', '-', '^', '*', '/', '|', '&', \
+                                '>', '<', '=', '!', ';', ',', '(', ')', '[', \
+                                ']', '{', '}', '.', '\0' \
+                              }
 #define DIGIT_CHAR_START (char[]) { "0123456789\0" }
 #define DIGIT_CHAR (char[]) { "+-xbabcdef.0123456789\0"  }
 #define WORD_CHAR (char[]) {"abcdefghijklmnopqrstuvwxyz_.0123456789\0"}
@@ -21,9 +25,9 @@ typedef enum {
 #define TOK_SHIELD_ '\\'
 
 
-#define ISLOWER(c) ('a' <= (c) && (c) <= 'z')
+//#define ISLOWER(c) ('a' <= (c) && (c) <= 'z')
 #define ISUPPER(c) ('A' <= (c) && (c) <= 'Z')
-#define TOUPPER(c) (ISLOWER(c) ? 'A' + ((c) - 'a') : (c))
+//#define TOUPPER(c) (ISLOWER(c) ? 'A' + ((c) - 'a') : (c))
 #define TOLOWER(c) (ISUPPER(c) ? ((c) -'A') + 'a' : (c))
 
 enum one_token {
