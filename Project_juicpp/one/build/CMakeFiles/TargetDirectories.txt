@@ -1,0 +1,3 @@
+/home/am/Project_juicpp/one/build/CMakeFiles/rebuild_cache.dir
+/home/am/Project_juicpp/one/build/CMakeFiles/edit_cache.dir
+/home/am/Project_juicpp/one/build/CMakeFiles/test1.dir

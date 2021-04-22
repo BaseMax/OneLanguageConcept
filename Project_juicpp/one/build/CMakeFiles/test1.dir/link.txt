@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=c11 -Wall -Wextra -rdynamic CMakeFiles/test1.dir/one.c.o CMakeFiles/test1.dir/parser.c.o CMakeFiles/test1.dir/scanner.c.o CMakeFiles/test1.dir/token.c.o CMakeFiles/test1.dir/buffer.c.o -o test1 

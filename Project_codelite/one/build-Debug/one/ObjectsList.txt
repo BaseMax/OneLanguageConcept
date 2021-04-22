@@ -1,0 +1,1 @@
+../build-Debug/one/buffer.c.o ../build-Debug/one/parser.c.o ../build-Debug/one/scanner.c.o ../build-Debug/one/one.c.o ../build-Debug/one/token.c.o
