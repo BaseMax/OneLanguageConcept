@@ -2,22 +2,24 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAX_NUMLEN 5
-#define MAX_CHAR_IN_KEYWORD 16
 #define SKIP_CHAR \
   (char[]) { ' ', '\r', '\t' }
-
 #define SUITABLE_CHAR \
   (char[]) { "abcdefghijklmnopqrstuvwxyz_0123456789" }
-
 #define SUITABLE_DIGIT \
   (char[]) { "xb0123456789" }
+#define EOL '\n'
+#define HEX 'x'
+#define BIN 'b'
+#define STR '\"'
+#define SHIELD '\\'
 
 typedef enum {
   TOK_EOF = 0,
   TOK_NUMBER,
   TOK_HEXNUMBER,
   TOK_BINNUMBER,
+  TOK_STRING,
   TOK_VARIABLE,
   TOK_OTHER = -2,
   TOK_ERROR = -3
@@ -29,11 +31,12 @@ typedef enum {
   OP_PLUS,
   OP_PLUSPLUS,
   OP_COMMENT,
+  OP_ISLOWER,
   OP__MAX
 } OpNum;
 
 #define opchar \
-  (const char * [OP__MAX - OP_START - 1]) { "\n", "+", "++", "//" }
+  (const char * [OP__MAX - OP_START - 1]) { "\n", "+", "++", "//", "<" }
 
 typedef enum {
   KEY_START = 200,
@@ -57,8 +60,9 @@ typedef struct {
 Tokenizer *NewTokenizer(char *data2parse);
 int Token(Tokenizer *t);
 char *Value(Tokenizer *t);
-void Next(Tokenizer *t);
-void SkipEOL(Tokenizer *t);
+int Next(Tokenizer *t);
+void skipcommentline(Tokenizer *t);
+bool isstring(Tokenizer *t);
 bool issuitable(Tokenizer *t);
 bool isnumber(Tokenizer *t);
 bool iskeyword(Tokenizer *t);

@@ -1,8 +1,10 @@
-#include "two.h"
+#include "one.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 Tokenizer *t;
+int linecount = 1;
+int charpos = 0;
 
 void usage() {
   printf("USAGE:\n");
@@ -86,11 +88,11 @@ int main(int argc, char *argv[]) {
 void statement(Tokenizer *t) {
   switch (t->token) {
   case OP_COMMENT: {
-    SkipEOL(t);
+    skipcommentline(t);
     break;
   }
   case TOK_OTHER: {
-    printf("unknown %s\n", Value(t));
+    printf("unknown %s line %d pos %d\n", Value(t), linecount, charpos);
     break;
   }
   case TOK_NUMBER: {
@@ -101,15 +103,25 @@ void statement(Tokenizer *t) {
     printf("num 0x%lx\n", strtoul(Value(t), NULL, 0));
     break;
   }
+  case TOK_BINNUMBER: {
+    printf("num %s\n", Value(t));
+    break;
+  }
+  case TOK_STRING: {
+    printf("string %s\n", Value(t));
+    break;
+  }
   case TOK_VARIABLE: {
     printf("var %s\n", Value(t));
     break;
   }
   case TOK_EOL: {
+    linecount++;
+    charpos = 0;
     break;
   }
   default:
     printf("%s\n", Value(t));
   }
-  Next(t);
+  charpos += Next(t);
 }

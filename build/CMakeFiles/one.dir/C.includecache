@@ -6,6 +6,18 @@
 
 #IncludeRegexTransform: 
 
+/home/am/Project_juicpp/two/one.c
+one.h
+/home/am/Project_juicpp/two/one.h
+stdio.h
+-
+stdlib.h
+-
+
+/home/am/Project_juicpp/two/one.h
+tok.h
+/home/am/Project_juicpp/two/tok.h
+
 /home/am/Project_juicpp/two/tok.c
 tok.h
 /home/am/Project_juicpp/two/tok.h
@@ -21,16 +33,4 @@ stdbool.h
 -
 stdlib.h
 -
-
-/home/am/Project_juicpp/two/two.c
-two.h
-/home/am/Project_juicpp/two/two.h
-stdio.h
--
-stdlib.h
--
-
-/home/am/Project_juicpp/two/two.h
-tok.h
-/home/am/Project_juicpp/two/tok.h
 

@@ -130,17 +130,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named two
+# Target rules for targets named one
 
 # Build rule for target.
-two: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 two
-.PHONY : two
+one: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 one
+.PHONY : one
 
 # fast build rule for target.
-two/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/two.dir/build.make CMakeFiles/two.dir/build
-.PHONY : two/fast
+one/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/one.dir/build.make CMakeFiles/one.dir/build
+.PHONY : one/fast
+
+one.o: one.c.o
+
+.PHONY : one.o
+
+# target to build an object file
+one.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/one.dir/build.make CMakeFiles/one.dir/one.c.o
+.PHONY : one.c.o
+
+one.i: one.c.i
+
+.PHONY : one.i
+
+# target to preprocess a source file
+one.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/one.dir/build.make CMakeFiles/one.dir/one.c.i
+.PHONY : one.c.i
+
+one.s: one.c.s
+
+.PHONY : one.s
+
+# target to generate assembly for a file
+one.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/one.dir/build.make CMakeFiles/one.dir/one.c.s
+.PHONY : one.c.s
 
 tok.o: tok.c.o
 
@@ -148,7 +175,7 @@ tok.o: tok.c.o
 
 # target to build an object file
 tok.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/two.dir/build.make CMakeFiles/two.dir/tok.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/one.dir/build.make CMakeFiles/one.dir/tok.c.o
 .PHONY : tok.c.o
 
 tok.i: tok.c.i
@@ -157,7 +184,7 @@ tok.i: tok.c.i
 
 # target to preprocess a source file
 tok.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/two.dir/build.make CMakeFiles/two.dir/tok.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/one.dir/build.make CMakeFiles/one.dir/tok.c.i
 .PHONY : tok.c.i
 
 tok.s: tok.c.s
@@ -166,35 +193,8 @@ tok.s: tok.c.s
 
 # target to generate assembly for a file
 tok.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/two.dir/build.make CMakeFiles/two.dir/tok.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/one.dir/build.make CMakeFiles/one.dir/tok.c.s
 .PHONY : tok.c.s
-
-two.o: two.c.o
-
-.PHONY : two.o
-
-# target to build an object file
-two.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/two.dir/build.make CMakeFiles/two.dir/two.c.o
-.PHONY : two.c.o
-
-two.i: two.c.i
-
-.PHONY : two.i
-
-# target to preprocess a source file
-two.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/two.dir/build.make CMakeFiles/two.dir/two.c.i
-.PHONY : two.c.i
-
-two.s: two.c.s
-
-.PHONY : two.s
-
-# target to generate assembly for a file
-two.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/two.dir/build.make CMakeFiles/two.dir/two.c.s
-.PHONY : two.c.s
 
 # Help Target
 help:
@@ -204,13 +204,13 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... two"
+	@echo "... one"
+	@echo "... one.o"
+	@echo "... one.i"
+	@echo "... one.s"
 	@echo "... tok.o"
 	@echo "... tok.i"
 	@echo "... tok.s"
-	@echo "... two.o"
-	@echo "... two.i"
-	@echo "... two.s"
 .PHONY : help
 
 

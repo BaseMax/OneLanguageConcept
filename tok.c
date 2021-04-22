@@ -16,13 +16,16 @@ int Token(Tokenizer *t) {
   if ((int)(t->r[0]) == TOK_EOF)
     return t->token = TOK_EOF;
 
+  if (isstring(t))
+    return t->token = TOK_STRING;
+
   if (issuitable(t)) {
 
     if (isnumber(t)) {
       if (t->tokenSize > 2) {
-        if (t->r[1] == 'x')
+        if (t->r[1] == HEX)
           return t->token = TOK_HEXNUMBER;
-        if (t->r[1] == 'b')
+        if (t->r[1] == BIN)
           return t->token = TOK_BINNUMBER;
       }
       return t->token = TOK_NUMBER;
@@ -37,7 +40,8 @@ int Token(Tokenizer *t) {
   if (isoperation(t))
     return t->token;
 
-  t->tokenSize = 1;
+  if (t->tokenSize == 0)
+    t->tokenSize = 1;
   return t->token = TOK_OTHER;
 }
 
@@ -50,18 +54,35 @@ char *Value(Tokenizer *t) {
   return szBuffer;
 }
 
-void Next(Tokenizer *t) {
+int Next(Tokenizer *t) {
+  int retvalue = t->tokenSize;
   if (t->token == TOK_EOF)
-    return;
+    return 0;
   t->r += t->tokenSize;
-  while (((t->r[0]) != TOK_EOF) && (strchr(SKIP_CHAR, t->r[0]) != NULL))
+  while (((t->r[0]) != TOK_EOF) && (strchr(SKIP_CHAR, t->r[0]) != NULL)) {
     t->r++;
+    retvalue++;
+  }
+  return retvalue;
 }
 
-void SkipEOL(Tokenizer *t) {
-  while (t->r[t->tokenSize] != '\n' && t->r[t->tokenSize] != TOK_EOF) {
+void skipcommentline(Tokenizer *t) {
+  while (t->r[t->tokenSize] != EOL && t->r[t->tokenSize] != TOK_EOF) {
     t->tokenSize++;
   }
+}
+
+bool isstring(Tokenizer *t) {
+  if (t->r[0] != STR)
+    return false;
+  t->tokenSize++;
+  while (t->r[t->tokenSize] != STR && t->r[t->tokenSize] != TOK_EOF) {
+    t->tokenSize++;
+  }
+  if (t->r[t->tokenSize] != STR)
+    return false;
+  t->tokenSize++;
+  return true;
 }
 
 bool issuitable(Tokenizer *t) {
@@ -75,12 +96,26 @@ bool isnumber(Tokenizer *t) {
   if (isdigit(t->r[0])) {
     if (strchr(SUITABLE_DIGIT, tolower(t->r[1])) != NULL) {
       int i;
-      for (i = 2; i < t->tokenSize; i++) {
-        if (!isxdigit(t->r[i]))
+      if (t->r[1] == HEX) {
+        for (i = 2; i < t->tokenSize; i++) {
+          if (!isxdigit(t->r[i]))
+            return false;
+        }
+        if (i < 3)
           return false;
       }
-      if (!isdigit(t->r[1]) && i < 3)
-        return false;
+      if (t->r[1] == BIN) {
+        for (i = 2; i < t->tokenSize; i++) {
+          if ((t->r[i] != '0') & (t->r[i] != '1'))
+            return false;
+        }
+        if (i < 3)
+          return false;
+      }
+      for (i = 2; i < t->tokenSize; i++) {
+        if (!isdigit(t->r[i]))
+          return false;
+      }
       return true;
     }
   }

@@ -4,7 +4,7 @@ project(two)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -Wextra" )
 
-add_executable(two
-two.c
+add_executable(one
+one.c
 tok.c
 )
