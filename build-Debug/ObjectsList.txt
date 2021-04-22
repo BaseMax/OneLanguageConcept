@@ -1,0 +1,1 @@
+./build-Debug//parser.c.o ./build-Debug//one.c.o ./build-Debug//lexer.c.o

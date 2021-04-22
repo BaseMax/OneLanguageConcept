@@ -1,3 +1,0 @@
-/home/am/Project_juicpp/two/build/CMakeFiles/rebuild_cache.dir
-/home/am/Project_juicpp/two/build/CMakeFiles/edit_cache.dir
-/home/am/Project_juicpp/two/build/CMakeFiles/one.dir

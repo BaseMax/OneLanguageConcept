@@ -1,0 +1,38 @@
+#define
+-66
+	_ "hi" + "hi"
+/*      i32 isOrNo {
+	ret 0.2
+}*/
+float test {
+	ret -5*5
+}
+
+testArg(i32 a, i32 b) {
+}
+demo(f32 abc){}
+test{ aa ... bb}
+main(i32 a) {
+	/*
+	_ "hi"
+	_ "hi" + "hi"
+	_ 5
+	_ 5+5
+	_ 5.4
+	i32 a
+	f32 b
+	a = 4
+	b = 3.14
+	// _ sin()
+	sin(45)
+	sin(45,180)
+	//_ sin(45)
+	//_ sin(45,180)
+	//sin(45,180, sin(45))
+	//sin(45,180, sin())
+	*/
+	i32 a = 5
+	i8 b = sin(45)
+	sin(45, "hi")
+	56
+}
