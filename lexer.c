@@ -18,14 +18,22 @@ int lexer(char* programm_src){
     skip_unnecessary_char();
     while(src[0] != TOK_EOF) {
         if(src[0] == TOK_STR) {
-            //todo отправить одним токеном
             IsStrMode = !IsStrMode;
             if(IsStrMode){
-                new_token(TOK_STR);
+                //new_token(TOK_STR);
                 start_of_stack = src+1;
             }else{
-                printf("%.*s\n", src-start_of_stack, start_of_stack);
-                new_token(TOK_STR);
+                sToken *stok = malloc(sizeof(sToken));
+                stok->token = TOK_DATA_STRING;
+                stok->data = malloc(src-start_of_stack+1);
+                memcpy(stok->data,start_of_stack,src-start_of_stack);
+                *((char*)stok->data+(src-start_of_stack)) = '\0';
+                if(new_token(stok) != 0){
+                    //todo
+                    //error message here;
+                }
+                free(stok->data);
+                free(stok);
                 src++;
                 src_current_char_pos++;
             }
@@ -44,8 +52,13 @@ int lexer(char* programm_src){
                                     if(strchr(SKIP_CHAR, src[0]) == NULL)
                                         printf("An unknown symbol was encountered.\nIt should be included in one of the lexer.h lists\nline %d pos %d - %d ('%c')\n",src_current_line, (src_current_char_pos-1), src[0],src[0]);
                                     if(src[0] == TOK_EOL){
-                                       //printf("Extra token TOK_EOL\n");
-                                       new_token(TOK_EOL);
+                                       sToken *stok = malloc(sizeof(sToken));
+                                       stok->token = TOK_EOL;
+                                       stok->data = malloc(sizeof(int));
+                                       *((int*)stok->data) = 0;
+                                       int tmp = new_token(stok);
+                                       free(stok->data);
+                                       free(stok);
                                        src_current_line++; 
                                        src_current_char_pos = 0;
                                     }
@@ -80,40 +93,57 @@ int lexer(char* programm_src){
                 case 0b01001000://old word    new bad
                                 {
                                     int length = src-start_of_stack;
-                                    //printf("token %s %.*s\n",namet[0], length, start_of_stack);
                                     switch(old_data_type_in_the_buffer){
                                         case CHAR_CONTROL:{
                                             int pos = token_search(&one_keywords,sizeof(one_keywords), start_of_stack,length);
                                             int save_length = length;
-                                            bool ismodifed = false;
+                                            //todo
+                                            //bool ismodifed = false;
                                             while((pos<0)&&(length >1)){
                                               src--;  
                                               src_current_char_pos--;
                                               length--;
                                               pos = token_search(&one_keywords,sizeof(one_keywords), start_of_stack,length);
-                                              ismodifed = true;
+                                              //todo
+                                              //ismodifed = true;
                                             }
-                                            if(ismodifed){
-                                                 printf("The control character is not recognized and therefore modified.\nInitially \"%.*s\"\n",\
-                                                         save_length, start_of_stack);
-                                            }
+                                            //todo
+                                            //if(ismodifed){
+                                            //     printf("The control character is not recognized and therefore modified.\nInitially \"%.*s\"\n",\
+                                            //             save_length, start_of_stack);
+                                            //}
                                             if(pos>0){
-                                               new_token(pos); 
+                                               sToken *stok = malloc(sizeof(sToken));
+                                               stok->token = TOK_DATA_CONTROL;
+                                               stok->data = malloc(sizeof(int));
+                                               *((int*)stok->data) = pos;
+                                               if(new_token(stok) != 0){
+                                                   //todo
+                                                   //error message here; 
+                                               }
+                                               free(stok->data);
+                                               free(stok);
                                             }else{
                                                 if(start_of_stack[0] == TOK_EOL){
-                                                   //printf("Extra token TOK_EOL\n");
-                                                   new_token(TOK_EOL);
+                                                   sToken *stok = malloc(sizeof(sToken));
+                                                   stok->token = TOK_EOL;
+                                                   stok->data = malloc(sizeof(int));
+                                                   *((int*)stok->data) = 0;
+                                                   int tmp = new_token(stok);
+                                                   free(stok->data);
+                                                   free(stok);
                                                    src_current_line++; 
                                                    src_current_char_pos = 0;
                                                 }else{
-                                                    printf("An unknown control character was encountered.\nIt should be included in the onetok.h\nline %d pos %d \"%.*s\"\n",\
-                                                            src_current_line, (src_current_char_pos-length), length, start_of_stack);
+//                                                    printf("An unknown control character was encountered.\nIt should be included in the onetok.h\nline %d pos %d \"%.*s\"\n",\
+//                                                            src_current_line, (src_current_char_pos-length), length, start_of_stack);
+                                                    printf("Error at line %d pos %d \"%.*s\"\n",src_current_line, (src_current_char_pos-length), length, start_of_stack);
+
                                                 }
                                             }
                                             break;
                                         }
                                         case CHAR_DIGIT:{
-                                            // send digit token
                                             regex_t pattern;
                                             char* digit_text = malloc(length+1);
                                             strncpy(digit_text,start_of_stack,length);
@@ -123,13 +153,20 @@ int lexer(char* programm_src){
                                             result = regexec(&pattern, digit_text, 0, NULL, 0);
                                             if(result == 0){
                                                 regfree(&pattern);
-                                                new_token(TOK_DATA_INTEGER);
-                                                int base = 0;
-                                                if((digit_text[1] == 'b')|(digit_text[1]=='B')){
-                                                    digit_text[1]='0';
-                                                    base = 2;
+//                                                int base = 0;
+//                                                if((digit_text[1] == 'b')|(digit_text[1]=='B')){
+//                                                    digit_text[1]='0';
+//                                                    base = 2;
+//                                                }
+//                                                int val = (int)strtol(digit_text, NULL, base);
+                                                sToken *stok = malloc(sizeof(sToken));
+                                                stok->token = TOK_DATA_INTEGER;
+                                                stok->data = digit_text;
+                                                if(new_token(stok) != 0){
+                                                    //todo
+                                                    //error message here;
                                                 }
-                                                int val = (int)strtol(digit_text, NULL, base);
+                                                free(stok);
                                                 free(digit_text);
                                                 break;
                                             }
@@ -139,8 +176,15 @@ int lexer(char* programm_src){
                                             result = regexec(&pattern, digit_text, 0, NULL, 0);
                                             if(result == 0){
                                                 regfree(&pattern);
-                                                new_token(TOK_DATA_FLOAT);
-                                                float val = atof(digit_text);
+//                                                float val = atof(digit_text);
+                                                sToken *stok = malloc(sizeof(sToken));
+                                                stok->token = TOK_DATA_FLOAT;
+                                                stok->data = digit_text;
+                                                if(new_token(stok) != 0){;
+                                                    //todo
+                                                    //error message here;
+                                                }
+                                                free(stok);
                                                 free(digit_text);
                                                 break;
                                             }
@@ -152,11 +196,31 @@ int lexer(char* programm_src){
                                         case CHAR_WORD:{
                                             int pos = token_search(&one_keywords,sizeof(one_keywords), start_of_stack,length);
                                             if(pos>0){
-                                               new_token(pos); 
+                                               int ttype = typekeyword(pos);
+                                               sToken *stok = malloc(sizeof(sToken));
+                                               stok->token = ttype;
+                                               stok->data = malloc(sizeof(int));
+                                               *((int*)stok->data) = pos;
+                                               if(new_token(stok) != 0){
+                                                   //todo
+                                                   //error message here; 
+                                               }
+                                               free(stok->data);
+                                               free(stok);
                                             }else{
-                                                new_token(TOK_DATA_NAME);
-                                                printf("if this is a keyword it should be added in the onetok.h\nline %d pos %d %.*s\n",\
-                                                        src_current_line, (src_current_char_pos-length),length, start_of_stack);
+                                                sToken *stok = malloc(sizeof(sToken));
+                                                stok->token = TOK_DATA_NAME;
+                                                stok->data = malloc(length+1);
+                                                memcpy(stok->data,start_of_stack,length);
+                                                *((char*)stok->data+length) = '\0';
+                                                if(new_token(stok) != 0){
+                                                    //todo
+                                                    //error message here;
+                                                }
+                                                free(stok->data);
+                                                free(stok);
+//                                                printf("if this is a keyword it should be added in the onetok.h\nline %d pos %d %.*s\n",\
+//                                                        src_current_line, (src_current_char_pos-length),length, start_of_stack);
                                             }
                                             break;
                                         }
@@ -256,7 +320,7 @@ int token_search(char* token_byte_array,int token_byte_array_length, char* keywo
         if(token_byte_array[pos_text] == keyword[pos_search]) {
             ++pos_search;
             if((pos_search == len_search)&&(token_byte_array[pos_text+1]=='\0')) {
-                return ret+TOK_NULL;
+                return ret+TOK_START;
             }
         } else {
            pos_text -=pos_search;
@@ -265,4 +329,23 @@ int token_search(char* token_byte_array,int token_byte_array_length, char* keywo
         }
     }
     return -1;
+}
+
+int typekeyword(int token){
+    int ret = TOK_DATA_OTHERS;
+    switch(token){
+        case TOK_START ... TOK_END_OPERATION-1:{
+            int ret = TOK_DATA_OPERATION;
+            break;
+        }
+        case TOK_END_OPERATION+1 ... TOK_END_VARAIBLE_TYPE-1:{
+            int ret = TOK_DATA_VARAIBLE_TYPE;
+            break;
+        }
+        case TOK_END_VARAIBLE_TYPE+1 ... TOK_END_KEYWORD-1:{
+            int ret = TOK_DATA_KEYWORD;
+            break;
+        }
+    }
+    return ret;
 }

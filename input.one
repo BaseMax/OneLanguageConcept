@@ -4,6 +4,7 @@ uuiuu
 	ret 0.2
 }*/
 float test {
+__ bb
 	ret -5*5
 }
 

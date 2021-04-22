@@ -6,42 +6,61 @@ Node* Ltop;
 int status;
 
 
-void new_token(int token){
-    int stack_length=depth();
+int new_token(sToken *stok){
+    int ret = 0;
+    //int stack_length=depth();
     if(getvalue(0) == TOK_START_BLOCK_COMMENT){
-        if(token == TOK_END_BLOCK_COMMENT){
+        if(*((int*)stok->data) == TOK_END_BLOCK_COMMENT){
             pop();
-            printf("end comments\n\n"); 
         }
-//        printf(" skip \n"); 
-        return;
+        return 0;
     }
     if(getvalue(0) == TOK_LINE_COMMENT){
-        if(token == TOK_EOL){
+        if(stok->token == TOK_EOL){
             pop();
-            printf("end comments\n\n"); 
         }
-        if(token == TOK_SHIELD){
-            push(token);
+        if(*((int*)stok->data) == TOK_SHIELD){
+            push(*((int*)stok->data));
         }
-//        printf(" skip \n"); 
-        return;
+        return 0;
     }
     if((getvalue(1) == TOK_LINE_COMMENT)&&(getvalue(0)==TOK_SHIELD)){
-        if(token == TOK_EOL){
+        if(stok->token == TOK_EOL){
             pop();
         }
-//        printf(" skip \n"); 
-        return;
+        return 0;
     }
-    switch(token){
-        case TOK_START_BLOCK_COMMENT:
-        case TOK_LINE_COMMENT:{
-            printf("start comments\n\n"); 
-            push(token);
+    switch(stok->token){
+        case TOK_DATA_CONTROL:{
+            switch (*((int*)stok->data)){
+                case TOK_START_BLOCK_COMMENT:
+                case TOK_LINE_COMMENT:{
+                push(*((int*)stok->data));
+                break;
+            }
             break;
         }
+        }
     }
+
+ // for test
+   if(stok->token == TOK_DATA_STRING){
+        printf("\"%s\"\n",((char*)stok->data));
+   }
+   if(stok->token == TOK_DATA_INTEGER){
+       printf("%s\n",((char*)stok->data));
+   }
+   if(stok->token == TOK_DATA_FLOAT){
+       printf("%s\n",((char*)stok->data));
+   }
+   if(stok->token == TOK_DATA_NAME){
+       printf("%s\n",((char*)stok->data));
+   }
+   if((stok->token == TOK_DATA_CONTROL)){
+       printf("%d\n",*(int*)stok->data);
+   }
+   
+   return ret;
 }
 
 void parser_init(){
@@ -81,7 +100,6 @@ void pop(){
         Ltop = Ltmp;
     }
 }
-
 
 int depth(){
     int length = 0;

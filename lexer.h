@@ -27,14 +27,20 @@ typedef enum {
 #define TOLOWER(c) (ISUPPER(c) ? ((c) -'A') + 'a' : (c))
 
 enum one_token {
-TOK_NULL = 255
+TOK_START = 255
 #define DEF(id, str) ,id
 #include "onetok.h"
 #undef DEF
 ,
+TOK_DATA_CONTROL,
 TOK_DATA_INTEGER,
 TOK_DATA_FLOAT,
-TOK_DATA_NAME
+TOK_DATA_NAME,
+TOK_DATA_STRING,
+TOK_DATA_OPERATION,
+TOK_DATA_VARAIBLE_TYPE,
+TOK_DATA_KEYWORD,
+TOK_DATA_OTHERS
 //extra token here
 };
 
@@ -49,3 +55,4 @@ unsigned char calc_result(CharType,CharType);
 CharType character_check(char);
 bool skip_unnecessary_char(void);
 int lexer(char*);
+int typekeyword(int);
