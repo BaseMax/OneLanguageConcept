@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/am/Project_juicpp/two/build",
+  "command": "/usr/bin/cc    -std=c11 -Wall -Wextra -o CMakeFiles/two.dir/two.c.o -c /home/am/Project_juicpp/two/two.c",
+  "file": "/home/am/Project_juicpp/two/two.c"
+},
+{
+  "directory": "/home/am/Project_juicpp/two/build",
+  "command": "/usr/bin/cc    -std=c11 -Wall -Wextra -o CMakeFiles/two.dir/tok.c.o -c /home/am/Project_juicpp/two/tok.c",
+  "file": "/home/am/Project_juicpp/two/tok.c"
+}
+]
