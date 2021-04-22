@@ -3,6 +3,7 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
+    <File Name="state_table.c"/>
     <File Name="parser.h"/>
     <File Name="parser.c"/>
     <File Name="onetok.h"/>

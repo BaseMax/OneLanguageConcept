@@ -1,9 +1,6 @@
-// jjjj jjj \
-uuiuu
-/*      i32 isOrNo {
-	ret 0.2
-}*/
-f32 test() {
+i32 * data,mode = 6
+i32 data,mode
+ test() {
 __  bb
 	ret -5*5
 }
@@ -34,5 +31,5 @@ main(i32 a) {
 	i32 a = 5
 	i8 b = sin(45)
 	sin(45, "hi")
-	56
+	56.0
 }

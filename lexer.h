@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 typedef enum {
   CHAR_CONTROL = 4092,
@@ -60,3 +61,4 @@ CharType character_check(char);
 bool skip_unnecessary_char(void);
 int lexer(char*);
 int typekeyword(int);
+void errormessage(char*);

@@ -14,7 +14,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=am
-Date                   :=12/31/20
+Date                   :=01/03/21
 CodeLitePath           :=/home/am/.codelite
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -60,7 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=./build-$(ConfigurationName)//parser.c$(ObjectSuffix) ./build-$(ConfigurationName)//one.c$(ObjectSuffix) ./build-$(ConfigurationName)//lexer.c$(ObjectSuffix) 
+Objects0=./build-$(ConfigurationName)//state_table.c$(ObjectSuffix) ./build-$(ConfigurationName)//parser.c$(ObjectSuffix) ./build-$(ConfigurationName)//one.c$(ObjectSuffix) ./build-$(ConfigurationName)//lexer.c$(ObjectSuffix) 
 
 
 
@@ -91,6 +91,14 @@ PreBuild:
 ##
 ## Objects
 ##
+./build-$(ConfigurationName)//state_table.c$(ObjectSuffix): state_table.c ./build-$(ConfigurationName)//state_table.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/am/Project_codelite/wrk/state_table.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/state_table.c$(ObjectSuffix) $(IncludePath)
+./build-$(ConfigurationName)//state_table.c$(DependSuffix): state_table.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT./build-$(ConfigurationName)//state_table.c$(ObjectSuffix) -MF./build-$(ConfigurationName)//state_table.c$(DependSuffix) -MM state_table.c
+
+./build-$(ConfigurationName)//state_table.c$(PreprocessSuffix): state_table.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) ./build-$(ConfigurationName)//state_table.c$(PreprocessSuffix) state_table.c
+
 ./build-$(ConfigurationName)//parser.c$(ObjectSuffix): parser.c ./build-$(ConfigurationName)//parser.c$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/am/Project_codelite/wrk/parser.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/parser.c$(ObjectSuffix) $(IncludePath)
 ./build-$(ConfigurationName)//parser.c$(DependSuffix): parser.c

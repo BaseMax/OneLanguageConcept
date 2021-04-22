@@ -1,1 +1,1 @@
-./build-Debug//parser.c.o ./build-Debug//one.c.o ./build-Debug//lexer.c.o
+./build-Debug//state_table.c.o ./build-Debug//parser.c.o ./build-Debug//one.c.o ./build-Debug//lexer.c.o

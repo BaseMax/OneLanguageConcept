@@ -2,6 +2,7 @@
 #include "parser.h"
 #include <regex.h>
 
+
 char* src;
 char* start_of_stack;
 int src_current_char_pos = 1;
@@ -43,6 +44,10 @@ int lexer(char* programm_src){
                 src++;
                 src_current_char_pos++;
             }
+            if(src[0] == TOK_EOL){
+                errormessage("completion character \" expected");
+                IsStrMode = false;
+            }
         }else{
             new_data_type_in_the_buffer = character_check(TOLOWER(src[0]));
             unsigned char compare_result = calc_result(new_data_type_in_the_buffer,old_data_type_in_the_buffer);
@@ -56,7 +61,11 @@ int lexer(char* programm_src){
                                        stok->token = TOK_EOL;
                                        stok->data = malloc(sizeof(int));
                                        *((int*)stok->data) = TOK_EOL;
-                                       int tmp = new_token(stok);
+                                       if(new_token(stok) != 0){
+                                            errormessage("unexpected end of the line");
+                                           //todo
+                                           //error message here; 
+                                       }
                                        free(stok->data);
                                        free(stok);
                                        src_current_line++; 
@@ -95,29 +104,24 @@ int lexer(char* programm_src){
                                     int length = src-start_of_stack;
                                     switch(old_data_type_in_the_buffer){
                                         case CHAR_CONTROL:{
-                                            int pos = token_search(&one_keywords,sizeof(one_keywords), start_of_stack,length);
-                                            int save_length = length;
+                                            int pos = token_search((char*)&one_keywords,sizeof(one_keywords), start_of_stack,length);
+                                            //int save_length = length;
                                             //todo
-                                            //bool ismodifed = false;
                                             while((pos<0)&&(length >1)){
                                               src--;  
                                               src_current_char_pos--;
                                               length--;
-                                              pos = token_search(&one_keywords,sizeof(one_keywords), start_of_stack,length);
+                                              pos = token_search((char*)&one_keywords,sizeof(one_keywords), start_of_stack,length);
                                               //todo
                                               //ismodifed = true;
                                             }
-                                            //todo
-                                            //if(ismodifed){
-                                            //     printf("The control character is not recognized and therefore modified.\nInitially \"%.*s\"\n",\
-                                            //             save_length, start_of_stack);
-                                            //}
                                             if(pos>0){
                                                sToken *stok = malloc(sizeof(sToken));
                                                stok->token = TOK_DATA_CONTROL;
                                                stok->data = malloc(sizeof(int));
                                                *((int*)stok->data) = pos;
                                                if(new_token(stok) != 0){
+                                                    errormessage("not expected control character");
                                                    //todo
                                                    //error message here; 
                                                }
@@ -129,16 +133,17 @@ int lexer(char* programm_src){
                                                    stok->token = TOK_EOL;
                                                    stok->data = malloc(sizeof(int));
                                                    *((int*)stok->data) = TOK_EOL;
-                                                   int tmp = new_token(stok);
+                                                   if(new_token(stok) != 0){
+                                                        errormessage("unexpected end of the line");
+                                                       //todo
+                                                       //error message here; 
+                                                   }
                                                    free(stok->data);
                                                    free(stok);
                                                    src_current_line++; 
                                                    src_current_char_pos = 0;
                                                 }else{
-//                                                    printf("An unknown control character was encountered.\nIt should be included in the onetok.h\nline %d pos %d \"%.*s\"\n",\
-//                                                            src_current_line, (src_current_char_pos-length), length, start_of_stack);
                                                     printf("Error at line %d pos %d \"%.*s\"\n",src_current_line, (src_current_char_pos-length), length, start_of_stack);
-
                                                 }
                                             }
                                             break;
@@ -163,6 +168,7 @@ int lexer(char* programm_src){
                                                 stok->token = TOK_DATA_INTEGER;
                                                 stok->data = digit_text;
                                                 if(new_token(stok) != 0){
+                                                    errormessage("not expected integer number");
                                                     //todo
                                                     //error message here;
                                                 }
@@ -172,7 +178,7 @@ int lexer(char* programm_src){
                                             }
                                             regfree(&pattern);
 
-                                            result = regcomp(&pattern, "^[0-9]+\.[0-9]+$|^[0-9]+\.[0-9]+e[+-][0-9]+$", REG_EXTENDED);
+                                            result = regcomp(&pattern, "^[0-9]+\\.[0-9]+$|^[0-9]+\\.[0-9]+e[+-][0-9]+$", REG_EXTENDED);
                                             result = regexec(&pattern, digit_text, 0, NULL, 0);
                                             if(result == 0){
                                                 regfree(&pattern);
@@ -181,6 +187,7 @@ int lexer(char* programm_src){
                                                 stok->token = TOK_DATA_FLOAT;
                                                 stok->data = digit_text;
                                                 if(new_token(stok) != 0){;
+                                                    errormessage("not expected float number");
                                                     //todo
                                                     //error message here;
                                                 }
@@ -194,7 +201,7 @@ int lexer(char* programm_src){
                                             break;
                                         }
                                         case CHAR_WORD:{
-                                            int pos = token_search(&one_keywords,sizeof(one_keywords), start_of_stack,length);
+                                            int pos = token_search((char*)&one_keywords,sizeof(one_keywords), start_of_stack,length);
                                             if(pos>0){
                                                int ttype = typekeyword(pos);
                                                sToken *stok = malloc(sizeof(sToken));
@@ -202,6 +209,7 @@ int lexer(char* programm_src){
                                                stok->data = malloc(sizeof(int));
                                                *((int*)stok->data) = pos;
                                                if(new_token(stok) != 0){
+                                                    errormessage("not expected keyword");
                                                    //todo
                                                    //error message here; 
                                                }
@@ -214,16 +222,16 @@ int lexer(char* programm_src){
                                                 memcpy(stok->data,start_of_stack,length);
                                                 *((char*)stok->data+length) = '\0';
                                                 if(new_token(stok) != 0){
+                                                    errormessage("not expected name");
                                                     //todo
                                                     //error message here;
                                                 }
                                                 free(stok->data);
                                                 free(stok);
-//                                                printf("if this is a keyword it should be added in the onetok.h\nline %d pos %d %.*s\n",\
-//                                                        src_current_line, (src_current_char_pos-length),length, start_of_stack);
                                             }
                                             break;
                                         }
+                                        default:{}
                                     }
                                     src--;
                                     src_current_char_pos--;
@@ -319,13 +327,16 @@ int token_search(char* token_byte_array,int token_byte_array_length, char* keywo
     for (pos_text = 0; pos_text < len_text;++pos_text) {
         if(token_byte_array[pos_text] == keyword[pos_search]) {
             ++pos_search;
-            if((pos_search == len_search)&&(token_byte_array[pos_text+1]=='\0')) {
+            if((pos_search == len_search)&(token_byte_array[pos_text+1]=='\0')) {
                 return ret+TOK_START;
             }
         } else {
            pos_text -=pos_search;
            pos_search = 0;
-           if(token_byte_array[pos_text]=='\0')ret++;
+           while(token_byte_array[pos_text] != '\0'){
+               pos_text++;
+           }
+           ret++;
         }
     }
     return -1;
@@ -348,4 +359,9 @@ int typekeyword(int token){
         }
     }
     return ret;
+}
+
+
+void errormessage(char* msg){
+    printf("Error %s at line %d pos %ld \"%.*s\"\n",msg, src_current_line, (src_current_char_pos-(src-start_of_stack)), (int)(src-start_of_stack), start_of_stack);
 }

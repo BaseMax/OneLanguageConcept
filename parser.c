@@ -3,7 +3,8 @@
 
 Node* L;
 Node* Ltop;
-int status;
+int status = ST_EMPTY;
+int stack_marker = 0;
 
 
 int new_token(sToken *stok){
@@ -36,6 +37,9 @@ int new_token(sToken *stok){
         }
         return 0;
     }
+    if(! is_the_token_usable(stok, status)){
+        return 1;
+    }
     switch(stok->token){
         case TOK_DATA_CONTROL:{
             switch (*((int*)stok->data)){
@@ -45,63 +49,87 @@ int new_token(sToken *stok){
                                     push(stok);
                                     break;
                     }
-                    case TOK_PARENT_LEFT:{
-                                    if(check_stack(TOK_DATA_NAME,TOK_DATA_VARAIBLE_TYPE)){
-                                      printf("function detected %s\n",(char*)getdata(0));
-                                    }                        
-                                    break;
+                    case TOK_OP_MUL:{
+                        CH_STATUS(ST_TYPE_SPECIFED,ST_ASTERISK_DECLARED_FOR_TYPE);
                     }
-                //all in stack for test
+                    case TOK_VIRGOL:{
+                        CH_STATUS(ST_NAME_DECLARED,ST_NEXT_NAME);
+                    }
+                    case TOK_OP_DEFINE:{
+                        CH_STATUS(ST_NAME_DECLARED,ST_NEXT_NAME);
+                        CH_STATUS(ST_NEXT_VIRGOL_EOL_DEFINE,ST_WAIT_EXPRESION);
+                    }
                     default:{
-                            push(stok);
-                            break;
+                        ret = 1;
+                        break;
                     }
             }
             break;
         }
-        //all in stack for test
-        default:{
-            push(stok);
-            break;
-        }
-        /*
-        case TOK_DATA_STRING:{
-            push(stok);
+        case TOK_DATA_VARAIBLE_TYPE:{
+            if( status == ST_EMPTY ){ 
+                stack_marker = depth();
+                status = ST_TYPE_SPECIFED;
+                push(stok);                                 
+                break;
+            }
+            ret = 1;
             break;
         }
         case TOK_DATA_NAME:{
-            push(stok);
+            if( status == ST_EMPTY ){
+                stack_marker = depth();
+                status = ST_NAME_DECLARED;
+                push(stok);                          
+                break;
+            }
+            CH_STATUS(ST_TYPE_SPECIFED,ST_NAME_DECLARED);
+            CH_STATUS(ST_ASTERISK_DECLARED_FOR_TYPE,ST_NAME_DECLARED);
+            CH_STATUS(ST_NEXT_NAME,ST_NEXT_VIRGOL_EOL_DEFINE);
+            ret = 1;
             break;
         }
-         */ 
-            
+        case TOK_EOL:{
+            if(status == ST_NAME_DECLARED){
+                //one var declared set to programm tree
+                //& remove from stack
+                while((Ltop->stack_pos == stack_marker) && (Ltop -> prev != NULL)) pop();
+                status = Ltop->status;
+                break;
+            }
+            if(status == ST_NEXT_VIRGOL_EOL_DEFINE){
+                //several var declared set to programm tree
+                //& remove from stack
+                while((Ltop->stack_pos == stack_marker) && (Ltop -> prev != NULL)) pop();
+                status = Ltop->status;
+                break;
+            }
+            if(status == ST_EXPRESION){
+                //var + assigned value declared set to programm tree
+                //& remove from stack
+                while((Ltop->stack_pos == stack_marker) && (Ltop -> prev != NULL)) pop();
+                status = Ltop->status;
+                break;
+            }
+            ret = 1;
+            break;
+        }
+        case TOK_DATA_INTEGER:{
+             CH_STATUS(ST_WAIT_EXPRESION,ST_EXPRESION);
+        }
+        default:{
+            ret = 1;
+            break;
+        }
     }
-
- // for test
-/*
-   if(stok->token == TOK_DATA_STRING){
-        printf("\"%s\"\n",((char*)stok->data));
-   }
-
-   if(stok->token == TOK_DATA_INTEGER){
-       printf("%s\n",((char*)stok->data));
-   }
-   if(stok->token == TOK_DATA_FLOAT){
-       printf("%s\n",((char*)stok->data));
-   }
-   if(stok->token == TOK_DATA_NAME){
-       printf("%s\n",((char*)stok->data));
-   }
-   if((stok->token == TOK_DATA_CONTROL)){
-       printf("%d\n",*(int*)stok->data);
-   }
- */  
    return ret;
 }
 
 void parser_init(){
     L = (Node*)malloc(sizeof(Node));
     L->value = 0;
+    L->stack_pos = stack_marker;
+    L->status = ST_EMPTY;
     L->token_type = TOK_DATA_OTHERS;
     L->next = NULL;
     L->prev = NULL;
@@ -132,6 +160,8 @@ void push(sToken *_stok){
     Node * Ltmp = (Node*)malloc(sizeof(Node));
     Ltmp->prev = Ltop;
     Ltmp->next = NULL;
+    Ltmp->stack_pos = stack_marker;
+    Ltmp->status = status;
     Ltop->next = Ltmp;
     switch(_stok->token){
         case TOK_DATA_STRING:{
@@ -192,6 +222,7 @@ void pop(){
         if(Ltop->data != NULL) free(Ltop->data);
         free(Ltop);
         Ltop = Ltmp;
+        Ltop->next = NULL;
     }
 }
 
@@ -262,3 +293,4 @@ bool _check_stack(int count, ...) {
     }
 	return (i>count)?false:true;
 }
+
