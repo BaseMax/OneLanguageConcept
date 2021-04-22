@@ -18,6 +18,7 @@ int lexer(char* programm_src){
     skip_unnecessary_char();
     while(src[0] != TOK_EOF) {
         if(src[0] == TOK_STR) {
+            //todo отправить одним токеном
             IsStrMode = !IsStrMode;
             if(IsStrMode){
                 new_token(TOK_STR);
@@ -30,7 +31,7 @@ int lexer(char* programm_src){
             }
         }
         if(IsStrMode){
-            if(src[0] == TOK_SHIELD){
+            if(src[0] == TOK_SHIELD_){
                 src++;
                 src_current_char_pos++;
             }
@@ -153,6 +154,7 @@ int lexer(char* programm_src){
                                             if(pos>0){
                                                new_token(pos); 
                                             }else{
+                                                new_token(TOK_DATA_NAME);
                                                 printf("if this is a keyword it should be added in the onetok.h\nline %d pos %d %.*s\n",\
                                                         src_current_line, (src_current_char_pos-length),length, start_of_stack);
                                             }

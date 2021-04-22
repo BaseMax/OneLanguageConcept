@@ -11,4 +11,4 @@
      DEF(TOK_PRINTF, "_")     
      DEF(TOK_DEFINE, "define")     
      DEF(TOK_HASH, "#")     
-
+     DEF(TOK_SHIELD, "\\")     

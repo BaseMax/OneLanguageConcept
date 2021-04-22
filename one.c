@@ -1,5 +1,6 @@
 #include "one.h"
 #include "lexer.h"
+#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,8 +47,9 @@ int main(int argc, char *argv[]) {
     error("one file read error\n");
     exit(1);
   }
-
+  parser_init();
   int result = lexer(one);
+  parser_done();
 /*
   t = NewTokenizer(one);
   if (t == NULL) {

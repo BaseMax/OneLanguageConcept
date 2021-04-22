@@ -11,14 +11,14 @@ typedef enum {
 } CharType;
 
 #define SKIP_CHAR (char[]) { ' ', '\r', '\t' , '\n', '\0'}
-#define CONTROL_CHAR (char[]) { ',', '(', ')','{','}','#','"',':' ,'/','*','=', '+', '-', '.','\0'}
+#define CONTROL_CHAR (char[]) { ',', '(', ')','{','}','#','"',':','\\' ,'/','*','=', '+', '-', '.','\0'}
 #define DIGIT_CHAR_START (char[]) { "0123456789\0" }
 #define DIGIT_CHAR (char[]) { "+-xbabcdef.0123456789\0"  }
 #define WORD_CHAR (char[]) {"abcdefghijklmnopqrstuvwxyz_.0123456789\0"}
 #define TOK_EOF 0
 #define TOK_EOL '\n'
 #define TOK_STR '\"'
-#define TOK_SHIELD '/'
+#define TOK_SHIELD_ '\\'
 
 
 #define ISLOWER(c) ('a' <= (c) && (c) <= 'z')
@@ -33,7 +33,8 @@ TOK_NULL = 255
 #undef DEF
 ,
 TOK_DATA_INTEGER,
-TOK_DATA_FLOAT
+TOK_DATA_FLOAT,
+TOK_DATA_NAME
 //extra token here
 };
 
