@@ -58,6 +58,7 @@
     DEF(TOK_BRACKET_RIGHT, "]")
     DEF(TOK_SECTION_LEFT, "{")
     DEF(TOK_SECTION_RIGHT, "}")
+    DEF(TOK_CHOICE, "?")
     DEF(TOK_IF, "if")
     DEF(TOK_ELSE, "else")
     DEF(TOK_AS, "as")
