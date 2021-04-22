@@ -49,6 +49,20 @@ int main(int argc, char *argv[]) {
   }
   parser_init();
   int result = lexer(one);
+  
+  //L prt to first struct Node. all token in list
+  // int value      - token;
+  // int token_type - ;
+  // int stack_pos - ignore this;
+  // int status - ignore this;
+  // void *data - additionaldata eg string or char;
+  // struct _Node *next;
+  // struct _Node *prev;	
+  //
+  //skip = L->next
+  //exept = (L->token == <exp>) ? skip : null
+  //or exept = (*((int*)stok->data)  == <exp>) ? skip : null
+  
   parser_done();
 /*
   t = NewTokenizer(one);

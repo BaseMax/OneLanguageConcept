@@ -32,14 +32,17 @@ int new_token(sToken *stok){
         return 0;
     }
     if((getvalue(0)==TOK_SHIELD)){
+ 
         if(stok->token == TOK_EOL){
             pop();
         }
         return 0;
     }
+    /*
     if(! is_the_token_usable(stok, status)){
         return 1;
     }
+*/ 
     switch(stok->token){
         case TOK_DATA_CONTROL:{
             switch (*((int*)stok->data)){
@@ -49,6 +52,7 @@ int new_token(sToken *stok){
                                     push(stok);
                                     break;
                     }
+                    /*
                     case TOK_OP_MUL:{
                         CH_STATUS(ST_TYPE_SPECIFED,ST_ASTERISK_DECLARED_FOR_TYPE);
                     }
@@ -63,9 +67,11 @@ int new_token(sToken *stok){
                         ret = 1;
                         break;
                     }
+                     */ 
             }
             break;
         }
+        /*
         case TOK_DATA_VARAIBLE_TYPE:{
             if( status == ST_EMPTY ){ 
                 stack_marker = depth();
@@ -74,6 +80,7 @@ int new_token(sToken *stok){
                 break;
             }
             ret = 1;
+             
             break;
         }
         case TOK_DATA_NAME:{
@@ -121,7 +128,9 @@ int new_token(sToken *stok){
             ret = 1;
             break;
         }
+         */ 
     }
+    push(stok);
    return ret;
 }
 
@@ -257,6 +266,7 @@ int gettoken(int pos){
 }
 
 void* getdata(int pos){
+    
     int tpos = 0;
     Node * Ltmp = Ltop;
     while ((tpos!=pos)&&(Ltmp->prev != NULL)){
@@ -265,8 +275,6 @@ void* getdata(int pos){
     }
     return (tpos==pos)?Ltmp->data:NULL;
 }
-
-
 bool _check_stack(int count, ...) {
 	va_list	arg_ptr;
 	int		i = 0;
