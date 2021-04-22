@@ -1,5 +1,4 @@
-#define
--66
+-0b110011 0b110011
 	_ "hi" + "hi"
 /*      i32 isOrNo {
 	ret 0.2

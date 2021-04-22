@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "parser.h"
+#include <regex.h>
 
 char* src;
 char* start_of_stack;
@@ -112,6 +113,39 @@ int lexer(char* programm_src){
                                         }
                                         case CHAR_DIGIT:{
                                             // send digit token
+                                            regex_t pattern;
+                                            char* digit_text = malloc(length+1);
+                                            strncpy(digit_text,start_of_stack,length);
+                                            digit_text[length]='\0';
+
+                                            int result = regcomp(&pattern, "^[0-9]+$|^0[xX][0-9a-fA-F]+$|^0[bB][01]+$", REG_EXTENDED);
+                                            result = regexec(&pattern, digit_text, 0, NULL, 0);
+                                            if(result == 0){
+                                                regfree(&pattern);
+                                                new_token(TOK_DATA_INTEGER);
+                                                int base = 0;
+                                                if((digit_text[1] == 'b')|(digit_text[1]=='B')){
+                                                    digit_text[1]='0';
+                                                    base = 2;
+                                                }
+                                                int val = (int)strtol(digit_text, NULL, base);
+                                                free(digit_text);
+                                                break;
+                                            }
+                                            regfree(&pattern);
+
+                                            result = regcomp(&pattern, "^[0-9]+\.[0-9]+$|^[0-9]+\.[0-9]+e[+-][0-9]+$", REG_EXTENDED);
+                                            result = regexec(&pattern, digit_text, 0, NULL, 0);
+                                            if(result == 0){
+                                                regfree(&pattern);
+                                                new_token(TOK_DATA_FLOAT);
+                                                float val = atof(digit_text);
+                                                free(digit_text);
+                                                break;
+                                            }
+                                            regfree(&pattern);
+
+                                            free(digit_text);
                                             break;
                                         }
                                         case CHAR_WORD:{
