@@ -2,9 +2,9 @@
 
 _One Programming Language_
 
-**Stage:** lexer and parser
+**Stage:** lexer and parser, Operator analysis
 
-**Remaining work:** Operator analysis / data-type support / intermediate code generation
+**Remaining work:** Data-type support, Intermediate code generation
 
 **Source:** Parsing Techniques - A Practical Guide, 2nd Edition.pdf
 
