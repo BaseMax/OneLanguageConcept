@@ -4,6 +4,6 @@ _One Programming Language_
 
 **Stage:** lexer and parser
 
-> Thanks from Prof. Valentin, Hoping to work with him again.
+**Remaining work:** Operator analysis / data-type support / intermediate code generation
 
 © Copyright 2020 Max Base, Val K
