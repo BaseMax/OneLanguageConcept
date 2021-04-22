@@ -1,15 +1,14 @@
-?
 // jjjj jjj \
 uuiuu
 /*      i32 isOrNo {
 	ret 0.2
 }*/
-float test {
+f32 test() {
 __  bb
 	ret -5*5
 }
 
-testArg(i32 a, i32 b) {
+i8 testArg(i32 a, i32 b) {
 }
 demo(f32 abc){}
 test{ aa ... bb}

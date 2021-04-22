@@ -30,19 +30,32 @@ int new_token(sToken *stok){
         }
         return 0;
     }
+    if((getvalue(0)==TOK_SHIELD)){
+        if(stok->token == TOK_EOL){
+            pop();
+        }
+        return 0;
+    }
     switch(stok->token){
         case TOK_DATA_CONTROL:{
             switch (*((int*)stok->data)){
                     case TOK_START_BLOCK_COMMENT:
-                    case TOK_LINE_COMMENT:{
-                    push(stok);
-                    break;
-                }
+                    case TOK_LINE_COMMENT:
+                    case TOK_SHIELD:{
+                                    push(stok);
+                                    break;
+                    }
+                    case TOK_PARENT_LEFT:{
+                                    if(check_stack(TOK_DATA_NAME,TOK_DATA_VARAIBLE_TYPE)){
+                                      printf("function detected %s\n",(char*)getdata(0));
+                                    }                        
+                                    break;
+                    }
                 //all in stack for test
-                default:{
-                    push(stok);
-                    break;
-                }
+                    default:{
+                            push(stok);
+                            break;
+                    }
             }
             break;
         }
@@ -200,4 +213,52 @@ int getvalue(int pos){
         Ltmp = Ltmp->prev;
     }
     return (tpos==pos)?Ltmp->value:-1;
+}
+
+int gettoken(int pos){
+    int tpos = 0;
+    Node * Ltmp = Ltop;
+    while ((tpos!=pos)&&(Ltmp->prev != NULL)){
+        tpos++;
+        Ltmp = Ltmp->prev;
+    }
+    return (tpos==pos)?Ltmp->token_type:-1;
+}
+
+void* getdata(int pos){
+    int tpos = 0;
+    Node * Ltmp = Ltop;
+    while ((tpos!=pos)&&(Ltmp->prev != NULL)){
+        tpos++;
+        Ltmp = Ltmp->prev;
+    }
+    return (tpos==pos)?Ltmp->data:NULL;
+}
+
+
+bool _check_stack(int count, ...) {
+	va_list	arg_ptr;
+	int		i = 0;
+
+	va_start(arg_ptr, count);
+
+	for (i = 0; i < count; i++) {
+        int j=va_arg(arg_ptr, int);
+        switch(j){
+            case TOK_DATA_OPERATION:
+            case TOK_DATA_VARAIBLE_TYPE:
+            case TOK_DATA_KEYWORD:{
+                    if(gettoken(i) != j){
+                        i = count+1;
+                    }
+                    break;
+            }
+            default:{
+                if(getvalue(i) != j){
+                    i = count+1;
+                }
+            }
+	}
+    }
+	return (i>count)?false:true;
 }
